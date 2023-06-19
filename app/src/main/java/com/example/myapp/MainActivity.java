@@ -1,37 +1,65 @@
 package com.example.myapp;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
-
-    private TextView ResultTextView;
-    private EditText number_field_1, number_field_2;
-    private Button add_button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ResultTextView = findViewById(R.id.ResultTextView);
-        number_field_1 = findViewById(R.id.number_field_1);
-        number_field_2 = findViewById(R.id.number_field_2);
-        add_button = findViewById(R.id.add_button);
-
-        add_button.setOnClickListener(new View.OnClickListener() {
+        TextView main_text = findViewById(R.id.main_text);
+        Button btn_second = findViewById(R.id.btn_second);
+        btn_second.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                float num_1 = Float.parseFloat(number_field_1.getText().toString());
-                float num_2 = Float.parseFloat(number_field_1.getText().toString());
-                float res = num_1 + num_2;
-                ResultTextView.setText(String.valueOf(res));
+                showInfo(main_text.getText().toString(), btn_second);
+                showInfoAlert("Вы хотите закрыть приложение? ");
             }
         });
     }
+
+    public void btnClick(View v){
+        showInfo(((Button) v).getText().toString(), ((Button) v));
+    }
+
+    private void showInfoAlert(String text){
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle("Большая подсказка")
+                .setMessage(text)
+                .setCancelable(false)
+                .setPositiveButton("Конечно", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        finish();
+                    }
+                })
+                .setNegativeButton("Нет", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void showInfo(String text, Button btn){
+        btn.setText("Уже нажали");
+        btn.setBackgroundTintList(ColorStateList.valueOf(Color.BLUE));
+        Toast.makeText(this, text,Toast.LENGTH_LONG).show();
+    }
+
 }
